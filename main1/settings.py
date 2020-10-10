@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 
     #Apps
     'account',
+    'ecom',
+    # 'product',
 ]
 
 AUTH_USER_MODEL = 'account.Account' #appName.modelName
