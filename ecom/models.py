@@ -6,7 +6,7 @@ import random
 from django.conf import settings
 
 # Create your models here.
-
+from django.urls import reverse
 
 CATEGORY_CHOICE=(
     ('B','Bread'),
@@ -35,15 +35,19 @@ def default_cat_choice():
 
 
 class Product(models.Model):
-    name=models.CharField(max_length=100,)
+    name=models.CharField(max_length=100,default=default_product_name)
     desc=models.TextField(default="This is the desc of product")
-    price=models.IntegerField(default=60)
+    price=models.IntegerField(default=default_product_price)
     category=models.CharField(choices=CATEGORY_CHOICE,max_length=1)
     slug=models.SlugField()
+    list_product=models.BooleanField(default=True)
 
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('shop-detail',kwargs={'slug':self.slug})
 
 class ProductInCart(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
@@ -63,3 +67,6 @@ class Order(models.Model):
         return self.user.email
 
 
+
+# class Address(models.Model):
+#     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
