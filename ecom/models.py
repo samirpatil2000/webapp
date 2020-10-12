@@ -4,6 +4,7 @@ from django.db import models
 from django.db import models
 import random
 from django.conf import settings
+from django.utils import timezone
 
 # Create your models here.
 from django.urls import reverse
@@ -48,11 +49,14 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop-detail',kwargs={'slug':self.slug})
+    def get_add_to_cart_url(self):
+        return reverse('add_to_cart',kwargs={'slug':self.slug})
 
 class ProductInCart(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
-    quantity=models.IntegerField()
+    #order_date=models.DateTimeField(default=timezone.now())
+    quantity=models.IntegerField(default=1)
 
     def __str__(self):
         return f'{self.user.email} , {self.product} , {self.quantity}'
@@ -60,7 +64,7 @@ class ProductInCart(models.Model):
 class Order(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_ordered=models.BooleanField(default=False)
-    ordered_date=models.DateTimeField()
+    ordered_date=models.DateTimeField(default=timezone.now())
     products=models.ManyToManyField(ProductInCart)
 
     def __str__(self):
