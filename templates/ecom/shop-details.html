@@ -62,14 +62,19 @@
                         {% endcomment %}
                         <div class="product__details__price"> <h3>{{ object.price }} </h3></div>
                         <p>{{ object.desc }}</p>
+
                         <div class="product__details__quantity">
                             <div class="quantity">
-                                <div class="pro-qty">
-                                    <input type="text" value="1">
-                                </div>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="pro-qty">
+                                        <input type="text" name="quantity" value="1">
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <a href="{{ object.get_add_to_cart_url }}" class="primary-btn">ADD TO CARD</a>
+                        <a href="{{ object.get_add_to_cart_url }}" class="primary-btn">ADD</a>
+                        <a href="{{ object.get_remove_from_cart_url }}" class="primary-btn">REMOVE</a>
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
                             <li><b>Availability</b> <span>In Stock</span></li>

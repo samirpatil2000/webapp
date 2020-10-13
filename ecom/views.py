@@ -60,4 +60,58 @@ def add_to_cart(request,slug):
         return redirect("shop-detail",slug=slug)
 
 
+def add_to_cart_with_number(request,slug):
+    val=request.POST.get('quantity')
+    value=int(val)
+    if value==0:
+        raise
+    else:
+        product=get_object_or_404(Product,slug=slug)
+        order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
+
+        orders=Order.objects.filter(user=request.user)
+        if orders.exists():
+            order=orders[0]
+            if order.products.filter(product__slug=product.slug).exists():
+                order_product.quantity+=value
+                order_product.save()
+                messages.success(request,f"Updated {product.name} with {order_product.quantity}")
+                return redirect("shop-detail",slug=slug)
+            else:
+                order_product.quantity=value
+                order_product.save()
+                # order.products.add(order_product)
+                messages.success(request, f"Added {product.name} ")
+                return redirect("shop-detail",slug=slug)
+        else:
+            order=Order.objects.create(user=request.user)
+            order.products.add(order_product)
+            messages.success(request,f'{product.name} is added to your cart')
+            return redirect("shop-detail",slug=slug)
+
+def remove_from_cart(request,slug):
+    product=get_object_or_404(Product,slug=slug)
+
+    orders=Order.objects.filter(user=request.user,is_ordered=False)
+    if orders.exists():
+        order=orders[0]
+        if order.products.filter(product__slug=product.slug).exists():
+            order_product= ProductInCart.objects.filter( product=product,
+                                                         user=request.user,
+                                                         )[0]
+            order.products.remove(order_product)
+            messages.success(request,f" {product.name}  removed ")
+            return redirect("shop-detail",slug=slug)
+        else:
+            messages.success(request,  "This product is not in your cart")
+            return redirect("shop-detail",slug=slug)
+    else:
+        messages.success(request,f' You donot have such product in your cart ')
+        return redirect("shop-detail",slug=slug)
+
+
+
+
+
+
 

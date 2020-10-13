@@ -1,5 +1,6 @@
 
 {% load static %}
+{% load no_of_product_in_cart %}
 <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -140,13 +141,20 @@
                     </nav>
                 </div>
                 <div class="col-lg-3">
+                    {% if request.user.is_authenticated %}
                     <div class="header__cart">
                         <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            {% comment %} <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li> {% endcomment %}
+                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>{{ request.user| prod_in_cart }}</span></a></li>
                         </ul>
                         <div class="header__cart__price">item: <span>$150.00</span></div>
                     </div>
+                    {% else %}
+                    <div class="header__cart">
+                        <a href="{% url 'login' %}" class="primary-btn">Login</a>
+                        <a href="{% url 'register' %}" class="primary-btn">Register</a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="humberger__open">

@@ -52,6 +52,9 @@ class Product(models.Model):
     def get_add_to_cart_url(self):
         return reverse('add_to_cart',kwargs={'slug':self.slug})
 
+    def get_remove_from_cart_url(self):
+        return reverse('remove_from_cart',kwargs={'slug':self.slug})
+
 class ProductInCart(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)

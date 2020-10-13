@@ -11,5 +11,7 @@ urlpatterns = [
    #path('shop/<slug>',ProductDetailView.as_view(),name='shop-detail')
    path('shop/<slug>',views.ProductDeatilFBView,name='shop-detail'),
    path('add_to_cart/<slug>',views.add_to_cart,name='add_to_cart'),
+   path('remove_from_cart/<slug>',views.remove_from_cart,name='remove_from_cart'),
+   path('add_to_cart_with_number/<slug>',views.add_to_cart_with_number,name='add_to_cart_with_number'),
 
 ]
