@@ -144,8 +144,8 @@
                     {% if request.user.is_authenticated %}
                     <div class="header__cart">
                         <ul>
-                            {% comment %} <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li> {% endcomment %}
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>{{ request.user| prod_in_cart }}</span></a></li>
+                            <li><a href="{% url 'favlist' %}"><i class="fa fa-heart"></i> <span>{{ request.user| prod_in_favourite_list }}</span></a></li>
+                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i> <span>{{ request.user| prod_in_cart }}</span></a></li>
                         </ul>
                         <div class="header__cart__price">item: <span>$150.00</span></div>
                     </div>

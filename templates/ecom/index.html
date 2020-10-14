@@ -126,7 +126,7 @@
                     <div class="featured__item">
                         <div class="featured__item__pic set-bg" href="{{ obj.get_absolute_url }}" data-setbg="{% static 'ecom/img/featured/feature-2.jpg' %}">
                             <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                <li><a href="{{ obj.get_add_to_fav_url }}"><i class="fa fa-heart"></i></a></li>
                                 <li><a href="{{ obj.get_absolute_url }}"><i class="fa fa-eye"></i></a></li>
                                 <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                             </ul>

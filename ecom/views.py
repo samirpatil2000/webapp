@@ -1,9 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
 from django.views.generic import ListView,DetailView
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import View
 from .models import ProductInCart,Product,Order
 
@@ -111,6 +114,66 @@ def remove_from_cart(request,slug):
 
 
 
+
+def shoppingCart(request):
+    try:
+        products=Order.objects.get(user=request.user,is_ordered=False)
+        context={
+            'object':products,
+        }
+        return render(request,'ecom/shoping-cart.html',context)
+    except ObjectDoesNotExist :
+        messages.warning(request, "You do not have an active order")
+        redirect('index')
+
+class ShoppingCart(LoginRequiredMixin,View):
+    def get(self,*args,**kwargs):
+        try:
+            order=Order.objects.get(user=self.request.user,is_ordered=False)
+            context={
+                'object':order
+            }
+            return render(self.request,'account/index.html',context)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, "You do not have an active order")
+            return redirect('index')
+
+@login_required
+def add_to_fav(request,slug):
+    prod=get_object_or_404(Product,slug=slug)
+    qs=Product.objects.filter(favourite=request.user)
+    if qs.exists():
+        messages.warning(request," You already added ")
+    else:
+        messages.info(request, f" {prod.name} is added")
+        prod.favourite.add(request.user)
+
+    return redirect("shop-detail", slug=slug)
+
+@login_required
+def remove_from_fav(request,slug):
+    prod=get_object_or_404(Product,slug=slug)
+    qs=Product.objects.filter(favourite=request.user)
+    if qs.exists():
+        prod.favourite.remove(request.user)
+        messages.warning(request,f"{prod.name} is removed from favourite")
+    else:
+        messages.warning(request," You don't have this product in your fav")
+
+    return redirect("shop-detail", slug=slug)
+
+@login_required
+def favList(request):
+    try:
+        obj=Product.objects.filter(favourite=request.user)
+        context={
+            'object':obj
+        }
+        return render(request,'account/index.html',context)
+
+    except ObjectDoesNotExist:
+        messages.warning(request, "You do not have an active order")
+        redirect('index')
 
 
 

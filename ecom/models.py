@@ -42,6 +42,7 @@ class Product(models.Model):
     category=models.CharField(choices=CATEGORY_CHOICE,max_length=1)
     slug=models.SlugField()
     list_product=models.BooleanField(default=True)
+    favourite=models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,null=True)
 
 
     def __str__(self):
@@ -54,6 +55,11 @@ class Product(models.Model):
 
     def get_remove_from_cart_url(self):
         return reverse('remove_from_cart',kwargs={'slug':self.slug})
+
+    def get_add_to_fav_url(self):
+        return reverse('add_to_fav',kwargs={'slug':self.slug})
+    def get_remove_from_fav_url(self):
+        return reverse('remove_from_fav',kwargs={'slug':self.slug})
 
 class ProductInCart(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
