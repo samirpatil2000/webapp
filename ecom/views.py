@@ -8,19 +8,33 @@ from django.views.generic import ListView,DetailView
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import View
-from .models import ProductInCart,Product,Order
+from .models import ProductInCart,Product,Order,Category
 
 
 class HomeView(ListView):
     model = Product
     template_name = 'ecom/index.html'
     context_object_name = 'object'
+    # def get(self,*args,**kwargs):
 
 
-class ProductList(ListView):
+
+class ProductListView(ListView):
     model = Product
     template_name = 'ecom/shop-grid.html'
     context_object_name = 'object'
+
+def productList(request):
+
+    template_name = 'ecom/shop-grid.html'
+    cat=Category.objects.all()
+    list=Product.objects.all()
+
+    context={
+        'categories':cat,
+        'object':list
+    }
+    return render(request,template_name,context)
 
 class ProductDetailView(DetailView):
     model = Product
@@ -174,6 +188,26 @@ def favList(request):
     except ObjectDoesNotExist:
         messages.warning(request, "You do not have an active order")
         redirect('index')
+
+def search(request):
+    search_result=''
+    qs = Product.objects.all()
+    cat=Category.objects.all()
+
+    title_contains_query = request.GET.get('search_all')
+    if title_contains_query !='' and title_contains_query is not None:
+        qs=qs.filter(name__icontains=title_contains_query)
+
+    context={
+        'object':qs,
+        'categories':cat
+        }
+    return render(request,'ecom/index.html',context)
+
+
+
+
+
 
 
 

@@ -13,6 +13,7 @@ CATEGORY_CHOICE=(
     ('B','Bread'),
     ('E','Egg'),
     ('M','Milk'),
+    ('C','Chips'),
 )
 
 def default_product_name():
@@ -30,16 +31,24 @@ def default_cat_choice():
     n=random.randrange(0,2)
     cat=CATEGORY_CHOICE[n]
     return cat
+def default_cat():
+    cat_list=['Bread','Milk','Eggs','Chips']
+    n=random.randrange(0,len(cat_list))
+    return cat_list[n]
 
+class Category(models.Model):
+    name=models.CharField(default=default_cat,max_length=100)
 
-
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
     name=models.CharField(max_length=100,default=default_product_name)
     desc=models.TextField(default="This is the desc of product")
     price=models.IntegerField(default=default_product_price)
-    category=models.CharField(choices=CATEGORY_CHOICE,max_length=1)
+    #category=models.CharField(choices=CATEGORY_CHOICE,max_length=1)
+    category=models.ManyToManyField(Category)
     slug=models.SlugField()
     list_product=models.BooleanField(default=True)
     favourite=models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,null=True)

@@ -4,10 +4,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path,include
 from. import views
-from.views import HomeView,ProductList,ProductDetailView,ShoppingCart
+from.views import HomeView,ProductListView,ProductDetailView,ShoppingCart
 urlpatterns = [
-   path('',HomeView.as_view(),name='index'),
-   path('shop/',ProductList.as_view(),name='shop'),
+   #path('',HomeView.as_view(),name='index'),
+   path('',views.search,name='index'),
+   #path('shop/', ProductListView.as_view(), name='shop'),
+   path('shop/', views.productList, name='shop'),
    #path('shop/<slug>',ProductDetailView.as_view(),name='shop-detail')
    path('shop/<slug>',views.ProductDeatilFBView,name='shop-detail'),
    path('add_to_cart/<slug>',views.add_to_cart,name='add_to_cart'),
@@ -19,6 +21,7 @@ urlpatterns = [
    path('add_to_fav/<slug>',views.add_to_fav,name='add_to_fav'),
    path('remove_from_fav/<slug>',views.remove_from_fav,name='remove_from_fav'),
    path('favlist/',views.favList,name='favlist'),
+
 
 
 ]
