@@ -8,7 +8,8 @@ from django.views.generic import ListView,DetailView
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import View
-from .models import ProductInCart,Product,Order,Category
+from .models import ProductInCart,Product,Order,Category,Address
+from .forms import AddressForm
 
 
 class HomeView(ListView):
@@ -266,3 +267,47 @@ def category_detail(request,slug):
     }
     return render(request,'ecom/shop-grid-cat-filter.html',context)
 
+@login_required
+def checkoutPage(request):
+    save_address=Address.objects.filter(user=request.user,is_save=True)
+    context={
+
+    }
+    address_form=AddressForm(request.POST or None)
+
+    if request.method == 'POST':
+
+        """
+        user=request.user
+        name=request.POST['name']
+        address_1=request.POST['address_1']
+        address_2=request.POST['address_2']
+        mobile_number=request.POST['mobile_number']
+        zipcode=request.POST['zipcode']
+        city=request.POST['city']
+        is_save=request.POST['is_save']
+        address=Address.objects.create(
+            user=user,
+            name=name,
+            address_1=address_1,
+            address_2=address_2,
+            mobile_number=mobile_number,
+            zipcode=zipcode,
+            city=city,
+            is_save=is_save,
+        )
+        address.save()
+        
+        """
+
+        if address_form.is_valid():
+            add_address=address_form.save(commit=False)
+            address_form.instance.user=request.user
+            add_address.save()
+            messages.info(request,'Moving to payment')
+            return redirect('checkout')
+
+    return render(request,'ecom/checkout.html',{'form':address_form,'address':save_address})
+
+def update_detail_address(request,id):
+    pass

@@ -9,6 +9,8 @@ from django.utils import timezone
 # Create your models here.
 from django.urls import reverse
 
+from django.core.validators import MinValueValidator,MaxValueValidator
+
 CATEGORY_CHOICE=(
     ('B','Bread'),
     ('E','Egg'),
@@ -122,5 +124,23 @@ class Order(models.Model):
 
 
 
-# class Address(models.Model):
-#     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+class Address(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    name=models.CharField(default='Hostel',max_length=20)
+    address_1=models.CharField(default='Address',max_length=200)
+    address_2=models.CharField(default='Address',max_length=200,blank=True,null=True)
+    mobile_number=models.IntegerField(default='1234567890',
+                                      validators=[
+                                          MinValueValidator(999999999),
+                                          MaxValueValidator(9999999999)
+                                      ])
+    zipcode=models.IntegerField(default='400035',
+                                validators=[
+                                    MinValueValidator(99999),
+                                    MaxValueValidator(999999)
+                                ])
+    city=models.CharField(default='mumbai',max_length=20)
+    is_save=models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.user.email} -- {self.name}'

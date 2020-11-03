@@ -18,6 +18,8 @@ urlpatterns = [
 
    #path('cart/',ShoppingCart.as_view(),name='cart')
    path('cart/',views.shoppingCart,name='cart'),
+
+   # Favourites
    path('add_to_fav/<slug>',views.add_to_fav,name='add_to_fav'),
    path('remove_from_fav/<slug>',views.remove_from_fav,name='remove_from_fav'),
    path('favlist/',views.favList,name='favlist'),
@@ -26,8 +28,11 @@ urlpatterns = [
    path('add_single_item_to_cart/<slug>', views.add_single_item_to_cart, name='add_single_to_cart'),
    path('remove_single_item_from_cart/<slug>', views.remove_single_item_from_cart, name='remove_single_from_cart'),
 
-   #category
+   # category
    path('cat/<slug>',views.category_detail,name='category_detail'),
+
+   # checkout
+   path('checkout/',views.checkoutPage,name='checkout'),
 
 
 
