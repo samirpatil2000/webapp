@@ -24,7 +24,10 @@ urlpatterns = [
 
    # add/remove single product
    path('add_single_item_to_cart/<slug>', views.add_single_item_to_cart, name='add_single_to_cart'),
-   path('remove_single_item_from_cart/<slug>', views.remove_single_item_from_cart, name='remove_single_from_cart')
+   path('remove_single_item_from_cart/<slug>', views.remove_single_item_from_cart, name='remove_single_from_cart'),
+
+   #category
+   path('cat/<slug>',views.category_detail,name='category_detail'),
 
 
 

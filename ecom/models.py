@@ -38,9 +38,13 @@ def default_cat():
 
 class Category(models.Model):
     name=models.CharField(default=default_cat,max_length=100)
+    slug=models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_cat_url(self):
+        return reverse('category_detail',kwargs={'slug':self.slug})
 
 
 class Product(models.Model):

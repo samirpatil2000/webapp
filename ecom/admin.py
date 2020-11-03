@@ -7,3 +7,8 @@ admin.site.register(ProductInCart)
 admin.site.register(Order)
 
 admin.site.register(Category)
+
+
+#TODO Tasks
+#Checkout
+#Favourites

@@ -17,8 +17,6 @@ class HomeView(ListView):
     context_object_name = 'object'
     # def get(self,*args,**kwargs):
 
-
-
 class ProductListView(ListView):
     model = Product
     template_name = 'ecom/shop-grid.html'
@@ -237,6 +235,9 @@ def favList(request):
         messages.warning(request, "You do not have an active order")
         redirect('index')
 
+
+
+#TODO THIS IS THE HOME PAGE
 def search(request):
     search_result=''
     qs = Product.objects.all()
@@ -251,5 +252,17 @@ def search(request):
         'categories':cat
         }
     return render(request,'ecom/index.html',context)
+def category_detail(request,slug):
+    cat=get_object_or_404(Category,slug=slug)
+    qs=Product.objects.filter(category=cat)
+    cats=Category.objects.all()
 
+
+    context={
+        'object': qs,
+        'cat':cat,
+        'categories': cats,
+
+    }
+    return render(request,'ecom/shop-grid-cat-filter.html',context)
 
