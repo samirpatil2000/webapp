@@ -22,6 +22,10 @@ urlpatterns = [
    path('remove_from_fav/<slug>',views.remove_from_fav,name='remove_from_fav'),
    path('favlist/',views.favList,name='favlist'),
 
+   # add/remove single product
+   path('add_single_item_to_cart/<slug>', views.add_single_item_to_cart, name='add_single_to_cart'),
+   path('remove_single_item_from_cart/<slug>', views.remove_single_item_from_cart, name='remove_single_from_cart')
+
 
 
 ]

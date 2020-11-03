@@ -70,6 +70,16 @@ class Product(models.Model):
     def get_remove_from_fav_url(self):
         return reverse('remove_from_fav',kwargs={'slug':self.slug})
 
+    def get_remove_single_from_cart_url(self):
+        return reverse('remove_single_from_cart',kwargs={'slug':self.slug})
+
+    def get_add_single_to_cart_url(self):
+        return reverse('add_single_to_cart',kwargs={'slug':self.slug})
+
+
+
+
+
 class ProductInCart(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
@@ -79,6 +89,18 @@ class ProductInCart(models.Model):
     def __str__(self):
         return f'{self.user.email} , {self.product} , {self.quantity}'
 
+    def get_total_price(self):
+        return self.product.price * self.quantity
+
+    def get_total_discount_price(self):
+        return self.product.price * self.quantity
+
+
+    def get_final_amount(self):
+        if self.product.price:
+            return self.get_total_price()
+        return self.get_total_discount_price()
+
 class Order(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_ordered=models.BooleanField(default=False)
@@ -87,6 +109,12 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.email
+
+    def get_total_amount(self):
+        total_amount=0
+        for prod in self.products.all():
+            total_amount+=prod.get_final_amount()
+        return total_amount
 
 
 

@@ -106,6 +106,52 @@ def add_to_cart_with_number(request,slug):
             messages.success(request,f'{product.name} is added to your cart')
             return redirect("shop-detail",slug=slug)
 
+
+
+def add_single_item_to_cart(request, slug):
+    product=get_object_or_404(Product,slug=slug)
+    order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
+
+    orders=Order.objects.filter(user=request.user)
+    if orders.exists():
+        order=orders[0]
+        if order.products.filter(product__slug=product.slug).exists():
+            order_product.quantity+=1
+            order_product.save()
+            messages.success(request,f"Updated {product.name} with {order_product.quantity}")
+            return redirect("cart")
+        else:
+            order_product.quantity=1
+            order_product.save()
+            # order.products.add(order_product)
+            messages.success(request, f"Added {product.name} ")
+            return redirect("cart")
+    else:
+        order=Order.objects.create(user=request.user)
+        order.products.add(order_product)
+        messages.success(request,f'{product.name} is added to your cart')
+        return redirect("cart")
+
+
+def remove_single_item_from_cart(request, slug):
+    product=get_object_or_404(Product,slug=slug)
+    order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
+
+    orders=Order.objects.filter(user=request.user)
+    if orders.exists():
+        order=orders[0]
+        if order.products.filter(product__slug=product.slug).exists():
+            order_product.quantity-=1
+            order_product.save()
+            messages.success(request,f"Updated {product.name} with {order_product.quantity}")
+            return redirect("cart")
+    else:
+        order=Order.objects.create(user=request.user)
+        order.products.add(order_product)
+        messages.success(request,f'{product.name} is added to your cart')
+        return redirect("cart")
+
+
 def remove_from_cart(request,slug):
     product=get_object_or_404(Product,slug=slug)
 
@@ -117,6 +163,7 @@ def remove_from_cart(request,slug):
                                                          user=request.user,
                                                          )[0]
             order.products.remove(order_product)
+            order_product.delete()
             messages.success(request,f" {product.name}  removed ")
             return redirect("shop-detail",slug=slug)
         else:
@@ -125,6 +172,7 @@ def remove_from_cart(request,slug):
     else:
         messages.success(request,f' You donot have such product in your cart ')
         return redirect("shop-detail",slug=slug)
+
 
 
 
@@ -203,12 +251,5 @@ def search(request):
         'categories':cat
         }
     return render(request,'ecom/index.html',context)
-
-
-
-
-
-
-
 
 
