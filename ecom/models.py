@@ -107,22 +107,6 @@ class ProductInCart(models.Model):
             return self.get_total_price()
         return self.get_total_discount_price()
 
-class Order(models.Model):
-    user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    is_ordered=models.BooleanField(default=False)
-    ordered_date=models.DateTimeField(default=timezone.now())
-    products=models.ManyToManyField(ProductInCart)
-
-    def __str__(self):
-        return self.user.email
-
-    def get_total_amount(self):
-        total_amount=0
-        for prod in self.products.all():
-            total_amount+=prod.get_final_amount()
-        return total_amount
-
-
 
 class Address(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
@@ -144,3 +128,23 @@ class Address(models.Model):
 
     def __str__(self):
         return f'{self.user.email} -- {self.name}'
+
+
+class Order(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    is_ordered=models.BooleanField(default=False)
+    ordered_date=models.DateTimeField(default=timezone.now())
+    products=models.ManyToManyField(ProductInCart)
+    address=models.ForeignKey(Address,on_delete=models.CASCADE,blank=True,null=True)
+
+    def __str__(self):
+        return self.user.email
+
+    def get_total_amount(self):
+        total_amount=0
+        for prod in self.products.all():
+            total_amount+=prod.get_final_amount()
+        return total_amount
+
+
+

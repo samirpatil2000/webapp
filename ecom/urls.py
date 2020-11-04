@@ -37,6 +37,10 @@ urlpatterns = [
    #testing for mobile view
    path('mobile/',views.mobile_view,name='mobile_view'),
 
+   # update/use address from list
+   path('update_address/<id>',views.update_detail_address,name='update_detail_address'),
+   path('use_address/<id>',views.use_address,name='use_address'),
+
 
 
 ]
