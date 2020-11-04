@@ -34,6 +34,9 @@ urlpatterns = [
    # checkout
    path('checkout/',views.checkoutPage,name='checkout'),
 
+   #testing for mobile view
+   path('mobile/',views.mobile_view,name='mobile_view'),
+
 
 
 ]

@@ -12,6 +12,10 @@ from .models import ProductInCart,Product,Order,Category,Address
 from .forms import AddressForm
 
 
+
+def mobile_view(request):
+    return render(request,'ecom/mobile-view.html')
+
 class HomeView(ListView):
     model = Product
     template_name = 'ecom/index.html'
