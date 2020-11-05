@@ -34,7 +34,7 @@ def default_cat_choice():
     cat=CATEGORY_CHOICE[n]
     return cat
 def default_cat():
-    cat_list=['Bread','Milk','Eggs','Chips']
+    cat_list=['Bread','Milk','Eggs','Chips','Butter & Cheese']
     n=random.randrange(0,len(cat_list))
     return cat_list[n]
 

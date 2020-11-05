@@ -239,7 +239,7 @@ def favList(request):
         context={
             'object':obj
         }
-        return render(request,'account/index.html',context)
+        return render(request,'ecom/favourites.html',context)
 
     except ObjectDoesNotExist:
         messages.warning(request, "You do not have an active order")
@@ -251,7 +251,13 @@ def favList(request):
 def search(request):
     search_result=''
     qs = Product.objects.all()
-    cat=Category.objects.all()
+    cat = Category.objects.all()
+    bread =qs.filter(category__name='Bread')
+    Milk =qs.filter(category__name='Milk')
+    Eggs =qs.filter(category__name='Egg')
+    Chips =qs.filter(category__name='Chips')
+    butter =qs.filter(category__name='Butter and Cheese')
+
 
     title_contains_query = request.GET.get('search_all')
     if title_contains_query !='' and title_contains_query is not None:
@@ -259,9 +265,18 @@ def search(request):
 
     context={
         'object':qs,
-        'categories':cat
+        'categories':cat,
+        'breads':bread,
+        'milk':Milk,
+        'eggs':Eggs,
+        'chips':Chips,
+        'butter':butter,
         }
     return render(request,'ecom/index.html',context)
+
+
+
+
 def category_detail(request,slug):
     cat=get_object_or_404(Category,slug=slug)
     qs=Product.objects.filter(category=cat)
@@ -445,7 +460,8 @@ def delete_address(request,id):
     user=save_address.user
     if user != request.user:
         return HttpResponse("Restricted")
-    order.address.remove(save_address)
+    if order.address == save_address:
+        order.address.remove(save_address)
     save_address.delete()
     return redirect('checkout')
 

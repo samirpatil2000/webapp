@@ -12,16 +12,22 @@
             <a href="#"><img src="{% static 'ecom/img/logo.png' %}" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
-            <ul>
+
                 {% if request.user.is_authenticated %}
+            <ul>
                 <li><a href="{% url 'favlist' %}"><i class="fa fa-heart"></i> <span>{{ request.user| prod_in_favourite_list }}</span></a></li>
                 <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i> <span>{{ request.user| prod_in_cart }}</span></a></li>
+            </ul>
+            <div class="header__cart__price">item: <span>{{ request.user| total_bill_amount }}</span></div>
                 {% else %}
+            <ul>
                 <li><a href="{% url 'login' %}"><i class="fa fa-heart"></i> <span>0</span></a></li>
                 <li><a href="{% url 'login' %}"><i class="fa fa-shopping-bag"></i> <span>0</span></a></li>
-                {% endif %}
             </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
+
+                <div class="header__cart__price">item: <span>0</span></div>
+                {% endif %}
+
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
@@ -65,11 +71,11 @@
                 </li>
                 {% endcomment %}
                 {% if request.user.is_authenticated %}
-                <li><h5 href="#">Account</h5>
+                <li><a>Account</a>
                     <ul class="header__menu__dropdown">
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Your Orders</a></li>
-                        <li><a href="#">Your Address</a></li>
+                        <li><a class="h4" href="#">Profile</a></li>
+                        <li><a class="h4" href="#">Your Orders</a></li>
+                        <li><a class="h4" href="#">Your Address</a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'checkout' %}">Check Out</a></li>
@@ -184,7 +190,7 @@
                             <li><a href="{% url 'favlist' %}"><i class="fa fa-heart"></i> <span>{{ request.user| prod_in_favourite_list }}</span></a></li>
                             <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i> <span>{{ request.user| prod_in_cart }}</span></a></li>
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
+                        <div class="header__cart__price">Total: <span>  {{ request.user| total_bill_amount }}</span></div>
                     </div>
                     {% else %}
                     <div class="header__cart">
