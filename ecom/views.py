@@ -182,6 +182,10 @@ def remove_from_cart(request,slug):
 
 
 def shoppingCart(request):
+    products = Order.objects.filter(user=request.user, is_ordered=False)
+
+    if not products.exists():
+        return redirect('index')
     try:
         products=Order.objects.get(user=request.user,is_ordered=False)
         context={
@@ -279,47 +283,62 @@ def checkoutPage(request):
 
     }
     order=Order.objects.get(user=request.user)
-    address_form=ChechoutForm()
 
-    if request.POST:
-        address_form=ChechoutForm(request.POST or None)
-        if address_form.is_valid():
-            name=address_form.cleaned_data['name']
-            address_1=address_form.cleaned_data['address_1']
-            address_2=address_form.cleaned_data['address_2']
-            mobile_number=address_form.cleaned_data['mobile_number']
-            zipcode=address_form.cleaned_data['zipcode']
-            city=address_form.cleaned_data['city']
-            is_save=address_form.cleaned_data['is_save']
-            payment_option=address_form.cleaned_data['payment_option']
+    # order_qs=Order.objects.filter(user=request.user)
+    # order = order_qs[0]
 
-            add_address_from_form=Address(
-                user=request.user,
-                name=name,
-                address_1=address_1,
-                address_2=address_2,
-                mobile_number=mobile_number,
-                zipcode=zipcode,
-                city=city,
-                is_save=is_save,
-            )
-            add_address_from_form.save()
-            order.address=add_address_from_form
-            order.save()
+    if order.get_total_amount() != 0:
 
-            if payment_option == 'S':
-                return HttpResponse('Stripe Payment')
-            elif payment_option == 'P':
-                return HttpResponse('payment_paytm')
-            else:
-                messages.warning(
-                    request, "Invalid payment option selected")
-                return redirect('checkout')
+        address_form=ChechoutForm()
 
-    return render(request,'ecom/checkout.html',{'form':address_form,'address':save_address})
+        if request.POST:
+            address_form=ChechoutForm(request.POST or None)
+            if address_form.is_valid():
+                name=address_form.cleaned_data['name']
+                address_1=address_form.cleaned_data['address_1']
+                address_2=address_form.cleaned_data['address_2']
+                mobile_number=address_form.cleaned_data['mobile_number']
+                zipcode=address_form.cleaned_data['zipcode']
+                city=address_form.cleaned_data['city']
+                is_save=address_form.cleaned_data['is_save']
+                payment_option=address_form.cleaned_data['payment_option']
+
+                add_address_from_form=Address(
+                    user=request.user,
+                    name=name,
+                    address_1=address_1,
+                    address_2=address_2,
+                    mobile_number=mobile_number,
+                    zipcode=zipcode,
+                    city=city,
+                    is_save=is_save,
+                )
+                add_address_from_form.save()
+                if order.get_total_amount() == 0:
+                    messages.warning(request,'Your cart is empty')
+                    return redirect('cart')
+                order.address=add_address_from_form
+                order.save()
+
+                if payment_option == 'S':
+                    return HttpResponse('Stripe Payment')
+                elif payment_option == 'P':
+                    return HttpResponse('payment_paytm')
+                else:
+                    messages.warning(
+                        request, "Invalid payment option selected")
+                    return redirect('checkout')
+
+        return render(request,'ecom/checkout.html',{
+                                                'form':address_form,
+                                                'address':save_address,
+                                                'order':order,
+                                                })
+    messages.warning(request,"Your Cart Is Empty")
+    return redirect('cart')
 
 
-
+#TODO I have work on that
 """ THIS IS FOR PREVIOUS ADDRESS """
 @login_required
 def update_detail_address(request,id):
@@ -415,4 +434,19 @@ def use_address(request,id):
     #     'form':form
     # }
 
-    return render(request, 'ecom/checkout-use-addr.html',{'form':address_form})
+    return render(request, 'ecom/checkout-use-addr.html',{
+                                                           'form':address_form,
+                                                           'order':order,
+                                                          })
+def delete_address(request,id):
+    save_address=get_object_or_404(Address,id=id)
+    order=Order.objects.get(user=request.user)
+
+    user=save_address.user
+    if user != request.user:
+        return HttpResponse("Restricted")
+    order.address.remove(save_address)
+    save_address.delete()
+    return redirect('checkout')
+
+
