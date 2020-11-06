@@ -62,7 +62,7 @@ def add_to_cart(request,slug):
     product=get_object_or_404(Product,slug=slug)
     order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
 
-    orders=Order.objects.filter(user=request.user)
+    orders=Order.objects.filter(user=request.user,is_ordered=False)
     if orders.exists():
         order=orders[0]
         if order.products.filter(product__slug=product.slug).exists():
@@ -90,7 +90,7 @@ def add_to_cart_with_number(request,slug):
         product=get_object_or_404(Product,slug=slug)
         order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
 
-        orders=Order.objects.filter(user=request.user)
+        orders=Order.objects.filter(user=request.user,is_ordered=False)
         if orders.exists():
             order=orders[0]
             if order.products.filter(product__slug=product.slug).exists():
@@ -116,7 +116,7 @@ def add_single_item_to_cart(request, slug):
     product=get_object_or_404(Product,slug=slug)
     order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
 
-    orders=Order.objects.filter(user=request.user)
+    orders=Order.objects.filter(user=request.user,is_ordered=False)
     if orders.exists():
         order=orders[0]
         if order.products.filter(product__slug=product.slug).exists():
@@ -141,7 +141,7 @@ def remove_single_item_from_cart(request, slug):
     product=get_object_or_404(Product,slug=slug)
     order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
 
-    orders=Order.objects.filter(user=request.user)
+    orders=Order.objects.filter(user=request.user,is_ordered=False)
     if orders.exists():
         order=orders[0]
         if order.products.filter(product__slug=product.slug).exists():
@@ -186,7 +186,7 @@ def shoppingCart(request):
 
     if not products.exists():
         messages.warning(request,"Your Cart Is empty Shop Now")
-        return redirect('index')
+        return redirect('shop')
     try:
         products=Order.objects.get(user=request.user,is_ordered=False)
         context={
@@ -195,7 +195,7 @@ def shoppingCart(request):
         return render(request,'ecom/shoping-cart.html',context)
     except ObjectDoesNotExist :
         messages.warning(request, "You do not have an active order")
-        redirect('index')
+        redirect('shop')
 
 class ShoppingCart(LoginRequiredMixin,View):
     def get(self,*args,**kwargs):

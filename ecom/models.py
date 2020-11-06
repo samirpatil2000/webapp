@@ -150,4 +150,11 @@ class Order(models.Model):
         return reverse('order_history_detailview',kwargs={'id':self.pk})
 
 
+class Transaction(models.Model):
+    order=models.ForeignKey(Order,on_delete=models.CASCADE)
+    trans_date=models.DateTimeField(default=timezone.now())
+
+    def __str__(self):
+        return self.order.user
+
 
