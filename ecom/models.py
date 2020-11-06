@@ -146,5 +146,8 @@ class Order(models.Model):
             total_amount+=prod.get_final_amount()
         return total_amount
 
+    def get_absolute_order_url(self):
+        return reverse('order_history_detailview',kwargs={'id':self.pk})
+
 
 

@@ -45,5 +45,19 @@ urlpatterns = [
    path('delete_address/<id>',views.delete_address,name='delete_address'),
 
 
+   # Related to oder history
+   path('order_history/',views.order_history,name='order_history'),
+   path('order_history/<id>',views.order_history_detailview,name='order_history_detailview'),
+
+
+
+   #payment option
+   # path('payment_option/cash-on-delivery', views.confirmation_page_cod_order, name='confirmation_page_cod_order')
+
+   #ordered placed
+   # path('place_order/',views)
+
+
+
 
 ]

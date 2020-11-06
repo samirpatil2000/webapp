@@ -1,0 +1,91 @@
+
+{% extends 'ecom/base.html' %}
+{% load static %}
+{% block body %}
+<body>
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" data-setbg="{% static 'ecom/img/breadcrumb.jpg' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Your Orders</h2>
+                        <div class="breadcrumb__option">
+                            <a href="{% url 'index' %}">Home</a>
+                            <span>Order History</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Orders</th>
+                                    <th>Products</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                             {% for order_item in orders %}
+                                <tr>
+                                    <td class="shoping__cart__item">
+                                        <img href="{{ obj.get_absolute_url }}" src="{% static 'ecom/img/cart/cart-1.jpg' %}" alt="">
+                                        <h5>{{ order_item.ordered_date }}</h5>
+                                    </td>
+                                    <td class="shoping__cart__price">
+                                        {{ order_item.products.all.count }}
+                                    </td>
+                                    <td class="shoping__cart__price">
+                                        {{ order_item.products.all.quantity }}
+                                    </td>
+                                    <td class="shoping__cart__total">
+                                        {{ order_item.get_total_amount }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ order_item.get_absolute_order_url }}" class="btn btn-outline-info">View</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__btns">
+                        <a href="{% url 'shop' %}" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                        <a href="#" class="primary-btn cart-btn cart-btn-right">
+                            <span class="icon_loading"></span>
+                            Reorder </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+
+    <!-- Footer Section Begin -->
+
+    <!-- Footer Section End -->
+
+    <!-- Js Plugins -->
+
+
+
+</body>
+
+{% endblock body %}

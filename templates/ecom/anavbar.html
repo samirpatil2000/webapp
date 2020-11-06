@@ -74,7 +74,7 @@
                 <li><a>Account</a>
                     <ul class="header__menu__dropdown">
                         <li><a class="h4" href="#">Profile</a></li>
-                        <li><a class="h4" href="#">Your Orders</a></li>
+                        <li><a class="h4" href="{% url 'order_history' %}">Your Orders</a></li>
                         <li><a class="h4" href="#">Your Address</a></li>
                     </ul>
                 </li>
@@ -173,7 +173,7 @@
                             <li><h4 href="#">Account</h4>
                                 <ul class="header__menu__dropdown">
                                     <li><a href="#">Profile</a></li>
-                                    <li><a href="#">Your Orders</a></li>
+                                    <li><a href="{% url 'order_history' %}">Your Orders</a></li>
                                     <li><a href="#">Your Address</a></li>
                                 </ul>
                             </li>

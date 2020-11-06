@@ -43,6 +43,7 @@ class UpdateAddress(forms.ModelForm):
 PAYMENT_CHOICES = (
     ('P', 'PayTm'),
     ('S', 'Stripe'),
+    ('C', 'Cash On Delivery'),
 )
 
 class ChechoutForm(forms.Form):

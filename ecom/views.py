@@ -185,6 +185,7 @@ def shoppingCart(request):
     products = Order.objects.filter(user=request.user, is_ordered=False)
 
     if not products.exists():
+        messages.warning(request,"Your Cart Is empty Shop Now")
         return redirect('index')
     try:
         products=Order.objects.get(user=request.user,is_ordered=False)
@@ -291,13 +292,22 @@ def category_detail(request,slug):
     }
     return render(request,'ecom/shop-grid-cat-filter.html',context)
 
+
+
 @login_required
 def checkoutPage(request):
     save_address=Address.objects.filter(user=request.user,is_save=True)
     context={
 
     }
-    order=Order.objects.get(user=request.user)
+    order_qs=Order.objects.filter(user=request.user,is_ordered=False)
+
+    if not order_qs.exists():
+        return redirect('cart')
+
+    order=Order.objects.get(user=request.user,is_ordered=False)
+
+
 
     # order_qs=Order.objects.filter(user=request.user)
     # order = order_qs[0]
@@ -339,6 +349,11 @@ def checkoutPage(request):
                     return HttpResponse('Stripe Payment')
                 elif payment_option == 'P':
                     return HttpResponse('payment_paytm')
+                elif payment_option == 'C':
+                    order.is_ordered=True
+                    order.save()
+                    messages.success(request,"Your Order Placed Successfully ...!")
+                    return redirect('index')
                 else:
                     messages.warning(
                         request, "Invalid payment option selected")
@@ -394,7 +409,7 @@ def update_detail_address(request,id):
 @login_required
 def use_address(request,id):
     save_address=get_object_or_404(Address,id=id)
-    order=Order.objects.get(user=request.user)
+    order=Order.objects.get(user=request.user,is_ordered=False)
     addr_user=save_address.user
     address_form=ChechoutForm()
     if request.user != addr_user:
@@ -429,6 +444,8 @@ def use_address(request,id):
                 return HttpResponse('Stripe Payment')
             elif payment_option == 'P':
                 return HttpResponse('payment_paytm')
+            elif payment_option == 'C':
+                return HttpResponse('COD')
             else:
                 messages.warning(
                     request, "Invalid payment option selected")
@@ -455,7 +472,7 @@ def use_address(request,id):
                                                           })
 def delete_address(request,id):
     save_address=get_object_or_404(Address,id=id)
-    order=Order.objects.get(user=request.user)
+    order=Order.objects.get(user=request.user,is_ordered=False)
 
     user=save_address.user
     if user != request.user:
@@ -464,5 +481,32 @@ def delete_address(request,id):
         order.address.remove(save_address)
     save_address.delete()
     return redirect('checkout')
+
+
+@login_required
+def order_history(request):
+    order_qs=Order.objects.filter(user=request.user,is_ordered=True)
+    if order_qs.exists():
+        context={
+            "orders":order_qs,
+        }
+        return render(request,'ecom/order_history.html',context)
+    messages.warning(request,"Your Order History is empty")
+    return redirect('cart')
+
+@login_required
+def order_history_detailview(request,id=id):
+    order=Order.objects.get(id=id)
+    if order.user != request.user:
+        return HttpResponse('Restricted ..!')
+    if order is not None:
+        context={
+            "object":order,
+        }
+        return render(request,'ecom/order_history_detailview.html',context)
+    messages.warning(request,"Your Order History is empty")
+    return redirect('cart')
+
+
 
 
