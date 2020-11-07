@@ -10,7 +10,7 @@ from django.views.generic import ListView,DetailView
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import View
 from .models import ProductInCart,Product,Order,Category,Address,Transaction
-from .forms import AddressForm,UpdateAddress,ChechoutForm
+from .forms import AddressForm,UpdateAddress,ChechoutForm,ChechoutFormPaymentOption
 
 
 
@@ -372,6 +372,7 @@ def checkoutPage(request):
 
 #TODO I have work on that
 """ THIS IS FOR PREVIOUS ADDRESS """
+
 @login_required
 def update_detail_address(request,id):
     save_address=get_object_or_404(Address,id=id)
@@ -402,44 +403,26 @@ def update_detail_address(request,id):
         'form':form
     }
 
-    return render(request, 'ecom/checkout-addr.html', context)
+    return render(request, 'ecom/checkout-edit-addr.html', context)
 
 
 
 """ This is for your previous address """
-
+#TODO USe save address
 @login_required
 def use_address(request,id):
     save_address=get_object_or_404(Address,id=id)
     order=Order.objects.get(user=request.user,is_ordered=False)
     addr_user=save_address.user
-    address_form=ChechoutForm()
+    payment_option_address_form=ChechoutFormPaymentOption()
     if request.user != addr_user:
         return HttpResponse("Restricted  ...!")
     if request.POST:
-        address_form=ChechoutForm(request.POST or None)
-        if address_form.is_valid():
-            name=address_form.cleaned_data['name']
-            address_1=address_form.cleaned_data['address_1']
-            address_2=address_form.cleaned_data['address_2']
-            mobile_number=address_form.cleaned_data['mobile_number']
-            zipcode=address_form.cleaned_data['zipcode']
-            city=address_form.cleaned_data['city']
-            is_save=address_form.cleaned_data['is_save']
-            payment_option=address_form.cleaned_data['payment_option']
+        payment_option_address_form=ChechoutFormPaymentOption(request.POST or None)
+        if payment_option_address_form.is_valid():
+            payment_option=payment_option_address_form.cleaned_data['payment_option']
 
-            add_address_from_form=Address(
-                user=request.user,
-                name=name,
-                address_1=address_1,
-                address_2=address_2,
-                mobile_number=mobile_number,
-                zipcode=zipcode,
-                city=city,
-                is_save=is_save,
-            )
-            add_address_from_form.save()
-            order.address=add_address_from_form
+            order.address=save_address
             order.save()
 
             if payment_option == 'S':
@@ -447,31 +430,23 @@ def use_address(request,id):
             elif payment_option == 'P':
                 return HttpResponse('payment_paytm')
             elif payment_option == 'C':
-                return HttpResponse('COD')
+                order.is_ordered = True
+                order.save()
+                transactions = Transaction.objects.create(order=order, payment_method=payment_option)
+                transactions.save()
+                messages.success(request, "Your Order Placed Successfully ...!")
+                return redirect('index')
             else:
                 messages.warning(
                     request, "Invalid payment option selected")
                 return redirect('checkout')
 
-    # form=UpdateAddress(
-    #     initial={
-    #         "name":save_address.name,
-    #         "address_1":save_address.address_1,
-    #         "address_2":save_address.address_2,
-    #         "mobile_number":save_address.mobile_number,
-    #         "zipcode":save_address.zipcode,
-    #         "city":save_address.city,
-    #         "is_save":save_address.is_save,
-    #     }
-    # )
-    # context={
-    #     'form':form
-    # }
-
     return render(request, 'ecom/checkout-use-addr.html',{
-                                                           'form':address_form,
+                                                           'form':payment_option_address_form,
                                                            'order':order,
+                                                            'save_address':save_address,
                                                           })
+@login_required
 def delete_address(request,id):
     save_address=get_object_or_404(Address,id=id)
     order=Order.objects.get(user=request.user,is_ordered=False)
@@ -505,13 +480,15 @@ def order_history_detailview(request,id=id):
     trans_date=transaction.trans_date
     # order=Order.objects.get(id=id)
     order=transaction.order
+    address=order.address
     if order.user != request.user:
         return HttpResponse('Restricted ..!')
     if order is not None:
         context={
             "object":order,
             "trans_date":trans_date,
-            "transactions":transaction
+            "transactions":transaction,
+            'address':address,
         }
         return render(request,'ecom/order_history_detailview.html',context)
     messages.warning(request,"Your Order History is empty")

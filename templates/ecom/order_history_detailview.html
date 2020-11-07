@@ -12,7 +12,7 @@
                     <div class="breadcrumb__text">
                         <h2>Order History</h2>
                         <div class="breadcrumb__option">
-                            <a href="{% url 'index' %}">Home</a>
+                            <a href="{% url 'order_history' %}">Orders</a>
                             <span>Shopping Cart</span>
                         </div>
                     </div>
@@ -72,12 +72,25 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="shoping__cart__btns">
-                        <a href="{% url 'shop' %}" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                    <div class="container">
+<!--                        <a href="{% url 'shop' %}" class="primary-btn cart-btn">CONTINUE SHOPPING</a>-->
+                        <a href="{% url 'shop' %}" class="btn btn-outline-info">CONTINUE SHOPPING</a>
+                        <a href="{% url 'shop' %}" class="btn btn-outline-info">REPEAT ORDER</a>
                     </div>
                 </div>
 
                 <div class="col-lg-6">
+                    <div class="shoping__checkout">
+                        <h5>Address Details</h5>
+                        <ul>
+                            <li>name :<span> <h6>{{ address.name }}</h6></span></li>
+                            <li>address_1 :<span><h6>{{ address.address_1 }}</h6></span></li>
+                            <li>address_2 :<span><h6>{{ address.address_2 }}</h6></span></li>
+                            <li>mobile_number :<span><h6>{{ address.mobile_number }}</h6></span></li>
+                            <li>zipcode :<span><h6>{{ address.zipcode }}</h6></span></li>
+                            <li>city :<span><h6>{{ address.city }}</h6></span></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="shoping__checkout">
@@ -88,7 +101,6 @@
                             <li>Order Date :<span><h6>{{ trans_date }}</h6></span></li>
                             <li>Time :<span><h6>{{ transactions.trans_date }}</h6></span></li>
                             <li>Payment Method<span><h6>{{ transactions.payment_method }}</h6></span></li>
-
                         </ul>
                     </div>
                 </div>

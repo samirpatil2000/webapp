@@ -56,3 +56,7 @@ class ChechoutForm(forms.Form):
     is_save=forms.BooleanField(required=False)
     payment_option=forms.ChoiceField(widget=forms.RadioSelect,
                                       choices=PAYMENT_CHOICES)
+
+class ChechoutFormPaymentOption(forms.Form):
+    payment_option = forms.ChoiceField(widget=forms.RadioSelect,
+                                       choices=PAYMENT_CHOICES)
