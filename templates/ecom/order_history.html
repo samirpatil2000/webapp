@@ -43,16 +43,16 @@
                                 <tr>
                                     <td class="shoping__cart__item">
                                         <img href="{{ obj.get_absolute_url }}" src="{% static 'ecom/img/cart/cart-1.jpg' %}" alt="">
-                                        <h5>{{ order_item.ordered_date }}</h5>
+                                        <h5>{{ order_item.trans_date }}</h5>
                                     </td>
                                     <td class="shoping__cart__price">
-                                        {{ order_item.products.all.count }}
+                                        {{ order_item.order.user }}
                                     </td>
                                     <td class="shoping__cart__price">
-                                        {{ order_item.products.all.quantity }}
+                                        {{ order_item.order.get_total_quantity_per_order }}
                                     </td>
                                     <td class="shoping__cart__total">
-                                        {{ order_item.get_total_amount }}
+                                        {{ order_item.order.get_total_amount }}
                                     </td>
                                     <td>
                                         <a href="{{ order_item.get_absolute_order_url }}" class="btn btn-outline-info">View</a>

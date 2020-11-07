@@ -9,8 +9,9 @@ from django.views.generic import ListView,DetailView
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import View
-from .models import ProductInCart,Product,Order,Category,Address
+from .models import ProductInCart,Product,Order,Category,Address,Transaction
 from .forms import AddressForm,UpdateAddress,ChechoutForm
+
 
 
 
@@ -109,7 +110,6 @@ def add_to_cart_with_number(request,slug):
             order.products.add(order_product)
             messages.success(request,f'{product.name} is added to your cart')
             return redirect("shop-detail",slug=slug)
-
 
 
 def add_single_item_to_cart(request, slug):
@@ -348,10 +348,12 @@ def checkoutPage(request):
                 if payment_option == 'S':
                     return HttpResponse('Stripe Payment')
                 elif payment_option == 'P':
-                    return HttpResponse('payment_paytm')
+                    return HttpResponse('Paytm')
                 elif payment_option == 'C':
                     order.is_ordered=True
                     order.save()
+                    transactions = Transaction.objects.create(order=order,payment_method=payment_option)
+                    transactions.save()
                     messages.success(request,"Your Order Placed Successfully ...!")
                     return redirect('index')
                 else:
@@ -485,7 +487,10 @@ def delete_address(request,id):
 
 @login_required
 def order_history(request):
-    order_qs=Order.objects.filter(user=request.user,is_ordered=True)
+    order_qs=Transaction.objects.filter(order__user=request.user,order__is_ordered=True)
+
+    # order_qs=Order.objects.filter(user=request.user,is_ordered=True)
+    # totol_quantity=
     if order_qs.exists():
         context={
             "orders":order_qs,
@@ -496,17 +501,27 @@ def order_history(request):
 
 @login_required
 def order_history_detailview(request,id=id):
-    order=Order.objects.get(id=id)
+    transaction=Transaction.objects.get(order__user=request.user,order__is_ordered=True,id=id)
+    trans_date=transaction.trans_date
+    # order=Order.objects.get(id=id)
+    order=transaction.order
     if order.user != request.user:
         return HttpResponse('Restricted ..!')
     if order is not None:
         context={
             "object":order,
+            "trans_date":trans_date,
+            "transactions":transaction
         }
         return render(request,'ecom/order_history_detailview.html',context)
     messages.warning(request,"Your Order History is empty")
     return redirect('cart')
 
 
-
-
+@login_required
+def transactions(request):
+    transaction=Transaction.objects.filter(order__user=request.user,order__is_ordered=True)
+    context={
+        'transactions':transaction,
+    }
+    return render(request,'account/index.html',context)

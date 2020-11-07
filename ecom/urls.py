@@ -49,6 +49,8 @@ urlpatterns = [
    path('order_history/',views.order_history,name='order_history'),
    path('order_history/<id>',views.order_history_detailview,name='order_history_detailview'),
 
+   #all transactions
+   path('transactions/',views.transactions,name='trans')
 
 
    #payment option

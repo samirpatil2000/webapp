@@ -81,10 +81,14 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="shoping__checkout">
-                        <h5>Cart Total</h5>
+                        <h5>Order Details</h5>
                         <ul>
-                            <li>Subtotal <span>{{ object.get_total_amount }}</span></li>
-                            <li>Total <span>{{ object.get_total_amount }}</span></li>
+                            <li>Subtotal :<span> <h6>{{ object.get_total_amount }}</h6></span></li>
+                            <li>Total :<span><h6>{{ object.get_total_amount }}</h6></span></li>
+                            <li>Order Date :<span><h6>{{ trans_date }}</h6></span></li>
+                            <li>Time :<span><h6>{{ transactions.trans_date }}</h6></span></li>
+                            <li>Payment Method<span><h6>{{ transactions.payment_method }}</h6></span></li>
+
                         </ul>
                     </div>
                 </div>

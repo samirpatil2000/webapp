@@ -108,6 +108,7 @@ class ProductInCart(models.Model):
         return self.get_total_discount_price()
 
 
+
 class Address(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     name=models.CharField(default='Hostel',max_length=20)
@@ -146,15 +147,28 @@ class Order(models.Model):
             total_amount+=prod.get_final_amount()
         return total_amount
 
-    def get_absolute_order_url(self):
-        return reverse('order_history_detailview',kwargs={'id':self.pk})
+    def get_total_quantity_per_order(self):
+        total_quantity=0
+        for i in self.products.all():
+            total_quantity+=i.quantity
+        return total_quantity
+
+
+
+    # def get_absolute_order_url(self):
+    #     return reverse('order_history_detailview',kwargs={'id':self.pk})
 
 
 class Transaction(models.Model):
     order=models.ForeignKey(Order,on_delete=models.CASCADE)
     trans_date=models.DateTimeField(default=timezone.now())
+    payment_method=models.CharField(default='COD',max_length=20)
 
     def __str__(self):
-        return self.order.user
+        return str(self.order.user.email)
+
+
+    def get_absolute_order_url(self):
+        return reverse('order_history_detailview',kwargs={'id':self.pk})
 
 

@@ -7,12 +7,10 @@
 <body>
 
 <h1> The Fav List </h1>
-{% for i in object %}
+{% for i in transactions %}
 <h3>sam</h3>
-<h4> <h5>{{forloop.counter}} .</h5>{{ i.name }}</h4>
-<h4>{{ i.price }}</h4>
-<h4>{{ i.discount_price }}</h4>
-<h4>{{ i.get_category_display }}</h4>
+ <h3>{{forloop.counter}} .</h3><h4>{{ i.order }}</h4>
+<h4>{{ i.trans_date }}</h4>
 {% endfor %}
 
 </body>
