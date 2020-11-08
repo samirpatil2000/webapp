@@ -114,7 +114,7 @@ class Address(models.Model):
     name=models.CharField(default='Hostel',max_length=20)
     address_1=models.CharField(default='Address',max_length=200)
     address_2=models.CharField(default='Address',max_length=200,blank=True,null=True)
-    mobile_number=models.IntegerField(default='1234567890',
+    mobile_number=models.IntegerField(default='1234567890',blank=True,null=True,
                                       validators=[
                                           MinValueValidator(999999999),
                                           MaxValueValidator(9999999999)
@@ -139,7 +139,7 @@ class Order(models.Model):
     is_ordered=models.BooleanField(default=False)
     ordered_date=models.DateTimeField(default=timezone.now())
     products=models.ManyToManyField(ProductInCart)
-    address=models.ForeignKey(Address,on_delete=models.CASCADE,blank=True,null=True)
+    address=models.ForeignKey(Address,on_delete=models.SET_NULL,blank=True,null=True)
 
     def __str__(self):
         return self.user.email
@@ -166,6 +166,27 @@ class Transaction(models.Model):
     order=models.ForeignKey(Order,on_delete=models.CASCADE)
     trans_date=models.DateTimeField(default=timezone.now())
     payment_method=models.CharField(default='COD',max_length=20)
+
+    address_name = models.CharField(default='Hostel', max_length=20)
+    address_address_1 = models.CharField(default='Address', max_length=200)
+    address_address_2 = models.CharField(default='Address', max_length=200, blank=True, null=True)
+    address_mobile_number_verified = models.IntegerField(default='1234567890',
+                                        validators=[
+                                            MinValueValidator(999999999),
+                                            MaxValueValidator(9999999999)
+                                        ])
+    address_mobile_number_2 = models.IntegerField(default='1234567890',blank=True, null=True,
+                                                validators=[
+                                                    MinValueValidator(999999999),
+                                                    MaxValueValidator(9999999999)
+                                                ])
+    address_zipcode = models.IntegerField(default='400035',
+                                  validators=[
+                                      MinValueValidator(99999),
+                                      MaxValueValidator(999999)
+                                  ])
+    address_city = models.CharField(default='mumbai', max_length=20)
+
 
     def __str__(self):
         return str(self.order.user.email)

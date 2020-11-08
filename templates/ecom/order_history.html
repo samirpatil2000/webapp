@@ -32,7 +32,9 @@
                             <thead>
                                 <tr>
                                     <th class="shoping__product">Orders</th>
+                                    {% comment %}
                                     <th>Products</th>
+                                    {% endcomment %}
                                     <th>Quantity</th>
                                     <th>Total</th>
                                     <th>View</th>
@@ -45,9 +47,11 @@
                                         <img href="{{ obj.get_absolute_url }}" src="{% static 'ecom/img/cart/cart-1.jpg' %}" alt="">
                                         <h5>{{ order_item.trans_date }}</h5>
                                     </td>
+                                    {% comment %}
                                     <td class="shoping__cart__price">
                                         {{ order_item.order.user }}
                                     </td>
+                                    {% endcomment %}
                                     <td class="shoping__cart__price">
                                         {{ order_item.order.get_total_quantity_per_order }}
                                     </td>

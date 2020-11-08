@@ -380,12 +380,16 @@ def checkoutPage(request):
                     city=city,
                     is_save=is_save,
                 )
-                add_address_from_form.save()
+
+                if is_save is True:
+                    add_address_from_form.save()
+
                 if order.get_total_amount() == 0:
                     messages.warning(request,'Your cart is empty')
                     return redirect('cart')
-                order.address=add_address_from_form
-                order.save()
+                if is_save is True:
+                    order.address=add_address_from_form
+                    order.save()
 
                 if payment_option == 'S':
                     return HttpResponse('Stripe Payment')
@@ -394,7 +398,18 @@ def checkoutPage(request):
                 elif payment_option == 'C':
                     order.is_ordered=True
                     order.save()
-                    transactions = Transaction.objects.create(order=order,payment_method=payment_option)
+                    transactions = Transaction.objects.create(
+                                                            order=order,
+                                                            payment_method=payment_option,
+                    address_name=name,
+                    address_address_1=address_1,
+                    address_address_2=address_2,
+                    #address_mobile_number_verified=,  AD THIS AFTER THE ADDING PHONE NUMBER FIELD
+                    address_mobile_number_2=mobile_number,
+                    address_zipcode=zipcode,
+                    address_city=city,
+
+                    )
                     transactions.save()
                     messages.success(request,"Your Order Placed Successfully ...!")
                     return redirect('index')
@@ -477,7 +492,18 @@ def use_address(request,id):
             elif payment_option == 'C':
                 order.is_ordered = True
                 order.save()
-                transactions = Transaction.objects.create(order=order, payment_method=payment_option)
+                transactions = Transaction.objects.create(
+                    order=order,
+                    payment_method=payment_option,
+                    address_name=save_address.name,
+                    address_address_1=save_address.address_1,
+                    address_address_2=save_address.address_2,
+                    # address_mobile_number_verified=,  TODO   THIS AFTER THE ADDING PHONE NUMBER FIELD
+                    address_mobile_number_2=save_address.mobile_number,
+                    address_zipcode=save_address.zipcode,
+                    address_city=save_address.city,
+
+                )
                 transactions.save()
                 messages.success(request, "Your Order Placed Successfully ...!")
                 return redirect('index')
@@ -525,7 +551,7 @@ def order_history_detailview(request,id=id):
     trans_date=transaction.trans_date
     # order=Order.objects.get(id=id)
     order=transaction.order
-    address=order.address
+    # address=order.address
     if order.user != request.user:
         return HttpResponse('Restricted ..!')
     if order is not None:
@@ -533,7 +559,7 @@ def order_history_detailview(request,id=id):
             "object":order,
             "trans_date":trans_date,
             "transactions":transaction,
-            'address':address,
+            # 'address':address,
         }
         return render(request,'ecom/order_history_detailview.html',context)
     messages.warning(request,"Your Order History is empty")
