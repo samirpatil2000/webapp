@@ -141,6 +141,8 @@
                 </div>
                 {% endfor %}
 
+                {% comment %}
+
                 {% for obj in breads %}
                 <div class="col-lg-3 col-md-4 col-sm-6 mix breads">
                     <div class="featured__item">
@@ -230,6 +232,9 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                {% endcomment %}
+<!--                <h2>testing</h2>-->
 
 
                 {% comment %}
@@ -339,8 +344,27 @@
                     </div>
                 </div>
                 {% endcomment %}
+
+
+
             </div>
+            <span class="step-links">
+                {% if object.has_previous %}
+                    <a class="btn btn-outline-info mb-4" href="?page=1">&laquo; first</a>
+                    <a class="btn btn-outline-info mb-4" href="?page={{ object.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="btn btn-dark mb-4">
+                    Page {{ object.number }} of {{ object.paginator.num_pages }}
+                </span>
+
+                {% if object.has_next %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{ object.next_page_number }}">Next</a>
+                    <a class="btn btn-outline-info mb-4" href="?page={{ object.paginator.num_pages }}">last &raquo</a>
+                {% endif %}
+            </span>
         </div>
+
     </section>
     <!-- Featured Section End -->
 

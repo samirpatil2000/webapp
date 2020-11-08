@@ -9,9 +9,19 @@ from django.views.generic import ListView,DetailView
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import View
-from .models import ProductInCart,Product,Order,Category,Address,Transaction
-from .forms import AddressForm,UpdateAddress,ChechoutForm,ChechoutFormPaymentOption
 
+from .models import (ProductInCart,
+                     Product,
+                     Order,
+                     Category,
+                     Address,
+                     Transaction)
+from .forms import (AddressForm,
+                    UpdateAddress,
+                    ChechoutForm,
+                    ChechoutFormPaymentOption)
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 
@@ -23,6 +33,53 @@ class HomeView(ListView):
     template_name = 'ecom/index.html'
     context_object_name = 'object'
     # def get(self,*args,**kwargs):
+
+
+
+
+
+#TODO THIS IS THE HOME PAGE
+def search(request):
+    search_result=''
+    qs = Product.objects.all()
+    cat = Category.objects.all()
+    bread =qs.filter(category__name='Bread')
+    Milk =qs.filter(category__name='Milk')
+    Eggs =qs.filter(category__name='Egg')
+    Chips =qs.filter(category__name='Chips')
+    butter =qs.filter(category__name='Butter and Cheese')
+
+
+    title_contains_query = request.GET.get('search_all')
+    if title_contains_query !='' and title_contains_query is not None:
+        qs=qs.filter(name__icontains=title_contains_query)
+
+    # Create a paginator to split your products queryset
+    paginator = Paginator(qs, 2)  # Show 1 contacts per page
+    # Get the current page number
+    page = request.GET.get('page')
+
+    try:
+        paginated_queryset=paginator.page(page)
+    except PageNotAnInteger:
+        paginated_queryset=paginator.page(1)
+    except EmptyPage: # showing last page
+        paginated_queryset=paginator.page(paginator.num_pages)
+
+    context={
+        # 'object':qs,
+        'object':paginated_queryset,
+        'categories':cat,
+        'breads':bread,
+        'milk':Milk,
+        'eggs':Eggs,
+        'chips':Chips,
+        'butter':butter,
+        }
+    return render(request,'ecom/index.html',context)
+
+
+
 
 class ProductListView(ListView):
     model = Product
@@ -260,36 +317,6 @@ def favList(request):
     except ObjectDoesNotExist:
         messages.warning(request, "You do not have an active order")
         redirect('index')
-
-
-
-#TODO THIS IS THE HOME PAGE
-def search(request):
-    search_result=''
-    qs = Product.objects.all()
-    cat = Category.objects.all()
-    bread =qs.filter(category__name='Bread')
-    Milk =qs.filter(category__name='Milk')
-    Eggs =qs.filter(category__name='Egg')
-    Chips =qs.filter(category__name='Chips')
-    butter =qs.filter(category__name='Butter and Cheese')
-
-
-    title_contains_query = request.GET.get('search_all')
-    if title_contains_query !='' and title_contains_query is not None:
-        qs=qs.filter(name__icontains=title_contains_query)
-
-    context={
-        'object':qs,
-        'categories':cat,
-        'breads':bread,
-        'milk':Milk,
-        'eggs':Eggs,
-        'chips':Chips,
-        'butter':butter,
-        }
-    return render(request,'ecom/index.html',context)
-
 
 
 
