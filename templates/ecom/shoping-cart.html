@@ -161,7 +161,11 @@
                             <li>Subtotal <span>{{ object.get_total_amount }}</span></li>
                             <li>Total <span>{{ object.get_total_amount }}</span></li>
                         </ul>
+                        {% if redirect_address_id %}
+                        <a href="{% url 'use_address' redirect_address_id %}" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        {% else %}
                         <a href="{% url 'checkout' %}" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

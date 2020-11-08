@@ -183,15 +183,30 @@ def remove_from_cart(request,slug):
 
 def shoppingCart(request):
     products = Order.objects.filter(user=request.user, is_ordered=False)
+    save_address_qs = Address.objects.filter(user=request.user, is_save=True)
+
+
+
+
+    if not request.user.is_authenticated:
+        messages.warning(request,"Please Register")
 
     if not products.exists():
         messages.warning(request,"Your Cart Is empty Shop Now")
         return redirect('shop')
     try:
         products=Order.objects.get(user=request.user,is_ordered=False)
-        context={
-            'object':products,
+
+        context = {
+            'object': products,
         }
+
+        # This is for to redirect save address address
+        if save_address_qs.exists():
+            redirect_address=save_address_qs[0]
+            redirect_address_id=redirect_address.id
+            context['redirect_address_id']=redirect_address_id
+
         return render(request,'ecom/shoping-cart.html',context)
     except ObjectDoesNotExist :
         messages.warning(request, "You do not have an active order")
@@ -386,8 +401,11 @@ def update_detail_address(request,id):
             addr.save()
             save_address=addr
             messages.info(request,f'{save_address.name} is updated')
+
             # return redirect('update_detail_address',id=id)
-            return redirect('checkout')
+            # return redirect('checkout')
+
+            return redirect('use_address',id=id)
     form=UpdateAddress(
         initial={
             "name":save_address.name,
@@ -493,7 +511,6 @@ def order_history_detailview(request,id=id):
         return render(request,'ecom/order_history_detailview.html',context)
     messages.warning(request,"Your Order History is empty")
     return redirect('cart')
-
 
 @login_required
 def transactions(request):

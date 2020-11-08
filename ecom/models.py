@@ -130,6 +130,9 @@ class Address(models.Model):
     def __str__(self):
         return f'{self.user.email} -- {self.name}'
 
+    # def get_absolute_order_url(self):
+    #     return reverse('order_history_detailview',kwargs={'id':self.pk})
+
 
 class Order(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
