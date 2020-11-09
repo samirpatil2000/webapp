@@ -547,7 +547,7 @@ def delete_address(request,id):
     if order.address == save_address:
         order.address.remove(save_address)
     save_address.delete()
-    return redirect('checkout')
+    return redirect('save_address')
 
 
 @login_required
@@ -592,4 +592,28 @@ def transactions(request):
     }
     return render(request,'account/index.html',context)
 
+def user_address(request):
+    address=Address.objects.filter(user=request.user)
+    context={
+        'addresses':address,
+    }
+    return render(request,'ecom/user-address.html',context)
 
+def create_address(request):
+    address=Address.objects.filter(user=request.user)
+    if address.count() > 3:
+        messages.warning(request,"You cant create more that three address")
+        return redirect('save_address')
+
+    forms=AddressForm()
+
+    if request.method =='POST':
+        forms=AddressForm(request.POST or None)
+        if forms.is_valid():
+            addr=forms.save(commit=False)
+            addr.is_save=True
+            addr.user=request.user
+            addr.save()
+            messages.info(request,'Address Is Saved')
+            return redirect('index')
+    return render(request,'ecom/create-address.html',{'form':forms})

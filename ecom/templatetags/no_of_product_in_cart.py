@@ -18,7 +18,7 @@ def prod_in_favourite_list(user):
     return 0
 @register.filter
 def total_bill_amount(user):
-    n=Order.objects.filter(user=user)
+    n=Order.objects.filter(user=user,is_ordered=False)
     if n.exists():
         return n[0].get_total_amount()
     return 0

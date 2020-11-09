@@ -10,8 +10,7 @@ class AddressForm(forms.ModelForm):
                 'address_2',
                 'mobile_number',
                 'zipcode',
-                'city',
-                'is_save',]
+                'city',]
 
 class UpdateAddress(forms.ModelForm):
     class Meta:

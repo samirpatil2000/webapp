@@ -53,7 +53,13 @@ urlpatterns = [
    path('transactions/',views.transactions,name='trans'),
 
    #ip address
-   path('get_ip/',views.get_ip,name='ip_address')
+   path('get_ip/',views.get_ip,name='ip_address'),
+
+   #user address
+   path('save_address/',views.user_address,name='save_address'),
+
+   #create address
+   path('create_address',views.create_address,name='create_address'),
 
 
    #payment option

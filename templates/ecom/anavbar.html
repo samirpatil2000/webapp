@@ -75,7 +75,7 @@
                     <ul class="header__menu__dropdown">
                         <li><a class="h4" href="#">Profile</a></li>
                         <li><a class="h4" href="{% url 'order_history' %}">Your Orders</a></li>
-                        <li><a class="h4" href="#">Your Address</a></li>
+                        <li><a class="h4" href="{% url 'save_address' %}">Your Address</a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'checkout' %}">Check Out</a></li>
@@ -174,7 +174,7 @@
                                 <ul class="header__menu__dropdown">
                                     <li><a href="#">Profile</a></li>
                                     <li><a href="{% url 'order_history' %}">Your Orders</a></li>
-                                    <li><a href="#">Your Address</a></li>
+                                    <li><a href="{% url 'save_address' %}">Your Address</a></li>
                                 </ul>
                             </li>
                             <li><a href="{% url 'checkout' %}">Checkout</a></li>

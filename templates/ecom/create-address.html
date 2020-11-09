@@ -28,10 +28,9 @@
     <!-- Checkout Section Begin -->
     <section class="checkout spad">
         <div class="container">
-                <div class="center">
-                    <a href="{% url 'save_address' %}" class="btn btn-outline-info">Use Save Address</a>
-                </div>
-            <br>
+            <div class="row">
+
+            </div>
             <div class="checkout__form">
                 <h4>Billing Details</h4>
                     <form method="POST">
@@ -47,45 +46,12 @@
                                     {{ form.mobile_number | as_crispy_field }}
                                     {{ form.zipcode | as_crispy_field }}
                                     {{ form.city | as_crispy_field }}
-                                    {{ form.is_save | as_crispy_field }}
-                                    <h5>Save Your Address For Future</h5>
                                 </fieldset>
-<!--                                <div class="form-group">-->
-<!--                                    <button class="btn btn-outline-info" type="submit">Address</button>-->
-<!--                                </div>-->
+                                <div class="form-group">
+                                    <button class="btn btn-outline-info" type="submit">Address</button>
+                                </div>
                             </div>
                         <div class="col-lg-4 col-md-6">
-                            <div class="checkout__order">
-                                <h4>Your Order</h4>
-                                <div class="checkout__order__products">Products <span>Total</span></div>
-                                <ul>
-                                    {% for obj in order.products.all %}
-                                    <li>{{ obj.product.name }}  x  {{ obj.quantity }} <span>{{ obj.get_final_amount }}</span></li>
-                                        {% comment %}
-                                        <li>Fresh Vegetable <span>$151.99</span></li>
-                                        <li>Organic Bananas <span>$53.99</span></li>
-                                        {% endcomment %}
-                                    {% endfor %}
-                                </ul>
-                                <div class="checkout__order__subtotal">Subtotal <span>{{ order.get_total_amount }}</span></div>
-                                <div class="checkout__order__total">Total <span>{{ order.get_total_amount }}</span></div>
-
-                                {% comment %}
-                                <div class="checkout__input__checkbox">
-                                    <label for="payment">
-                                        Check Payment
-                                        <input type="checkbox" id="payment">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                {% endcomment %}
-                                <div>
-                                    <label>
-                                        {{ form.payment_option | as_crispy_field }}
-                                    </label>
-                                </div>
-                                <button type="submit" class="site-btn">PLACE ORDER</button>
-                            </div>
                         </div>
                         </div>
                     </form>
