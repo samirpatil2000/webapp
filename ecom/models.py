@@ -83,16 +83,21 @@ class Product(models.Model):
         return reverse('add_single_to_cart',kwargs={'slug':self.slug})
 
 
+class IP(models.Model):
+    pub_date = models.DateTimeField('date published',default=timezone.now())
+    ip_address = models.GenericIPAddressField()
 
 
 
 class ProductInCart(models.Model):
+    #user_ip=models.ForeignKey(IP,on_delete=models.CASCADE,default='127.0.0.1')
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
     #order_date=models.DateTimeField(default=timezone.now())
     quantity=models.IntegerField(default=1)
 
     def __str__(self):
+        # return f'{self.user_ip} , {self.product} , {self.quantity}'
         return f'{self.user.email} , {self.product} , {self.quantity}'
 
     def get_total_price(self):

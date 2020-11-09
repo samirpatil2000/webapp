@@ -15,7 +15,8 @@ from .models import (ProductInCart,
                      Order,
                      Category,
                      Address,
-                     Transaction)
+                     Transaction,
+                     IP,)
 from .forms import (AddressForm,
                     UpdateAddress,
                     ChechoutForm,
@@ -34,6 +35,24 @@ class HomeView(ListView):
     context_object_name = 'object'
     # def get(self,*args,**kwargs):
 
+
+
+
+
+"""IP ADDRESS"""
+# testing for ip address
+def get_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
+    if x_forwarded_for:
+        ipaddress = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ipaddress = request.META.get('REMOTE_ADDR')
+        messages.info(request,"Meta Remote")
+    get_ip = IP.objects.create(ip_address=ipaddress)  # imported class from model
+    get_ip.save()
+    messages.info(request,f"Your Ip Address Is {ipaddress}")
+    return redirect('index')
 
 
 
@@ -572,3 +591,5 @@ def transactions(request):
         'transactions':transaction,
     }
     return render(request,'account/index.html',context)
+
+

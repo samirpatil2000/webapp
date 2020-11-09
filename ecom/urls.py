@@ -50,7 +50,10 @@ urlpatterns = [
    path('order_history/<id>',views.order_history_detailview,name='order_history_detailview'),
 
    #all transactions
-   path('transactions/',views.transactions,name='trans')
+   path('transactions/',views.transactions,name='trans'),
+
+   #ip address
+   path('get_ip/',views.get_ip,name='ip_address')
 
 
    #payment option
