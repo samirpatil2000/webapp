@@ -529,7 +529,7 @@ def update_detail_address(request,id):
             # return redirect('update_detail_address',id=id)
             # return redirect('checkout')
 
-            return redirect('use_address',id=id)
+            return redirect('save_address')
     form=UpdateAddress(
         initial={
             "name":save_address.name,
@@ -602,13 +602,12 @@ def use_address(request,id):
 @login_required
 def delete_address(request,id):
     save_address=get_object_or_404(Address,id=id)
-    order=Order.objects.get(user=request.user,is_ordered=False)
-
+    # order=Order.objects.get(user=request.user,is_ordered=False)
     user=save_address.user
     if user != request.user:
         return HttpResponse("Restricted")
-    if order.address == save_address:
-        order.address.remove(save_address)
+    # if order.address == save_address:
+    #     order.address.remove(save_address)
     save_address.delete()
     return redirect('save_address')
 

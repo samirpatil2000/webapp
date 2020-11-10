@@ -39,7 +39,15 @@
 
                                 <fieldset class="form-group">
                                     <legend class="'border-bottom mb-4">Update Address</legend>
-                                    {{ form | crispy }}
+                                    {% comment %}  {{ form | crispy }}  {% endcomment %}
+                                    {{ form.name | as_crispy_field }}
+                                    {{ form.address_1 | as_crispy_field }}
+                                    {{ form.address_2 | as_crispy_field }}
+                                <h5><small>This is your first number</small> {{ request.user.phone_number }}</h5>
+                                    {{ form.mobile_number | as_crispy_field }}
+                                    {{ form.zipcode | as_crispy_field }}
+                                    {{ form.city | as_crispy_field }}
+                                    {{ form.is_save | as_crispy_field }}
                                 </fieldset>
                                 <div class="form-group">
                                     <button class="btn btn-outline-info" type="submit">Save Address</button>
