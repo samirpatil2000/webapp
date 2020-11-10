@@ -158,20 +158,21 @@ def ProductDeatilFBView(request,slug):
     }
 
 # TODO this is thing is only I know What the fuck I did is here
-    """ USER CART """
-    order=Order.objects.get(user=request.user,is_ordered=False)
-    products_in_order=order.products.all()
-    product_list=[]
-    for i in products_in_order:
-        product_list.append(i.product)
-        context['product_cart']=i
-    print(product_list)
-    print(products_in_order)
-    if product in product_list:
-        context['product_in_cart']=product
-        print("This is work")
-        print(product)
-    print("Product is not")
+    if request.user.is_authenticated:
+        """ USER CART """
+        order=Order.objects.get(user=request.user,is_ordered=False)
+        products_in_order=order.products.all()
+        product_list=[]
+        for i in products_in_order:
+            product_list.append(i.product)
+            context['product_cart']=i
+        print(product_list)
+        print(products_in_order)
+        if product in product_list:
+            context['product_in_cart']=product
+            print("This is work")
+            print(product)
+        print("Product is not")
     # print(order)
     # print(products_in_order)
     # print(product)
