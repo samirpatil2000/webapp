@@ -59,7 +59,7 @@
                             <br>
                          </div>
                         {% comment %}
-                        <div class="sidebar__item sidebar__item__color--option">
+                           <div class="sidebar__item sidebar__item__color--option">
                             <h4>Colors</h4>
                             <div class="sidebar__item__color sidebar__item__color--white">
                                 <label for="white">
@@ -125,7 +125,6 @@
                                 </label>
                             </div>
                         </div>
-
                            <div class="sidebar__item">
                             <div class="latest-product__text">
                                 <h4>Latest Products</h4>
@@ -528,12 +527,29 @@
                         </div>
                         {% endcomment %}
                     </div>
+                    {% comment %}
                     <div class="product__pagination">
                         <a href="#">1</a>
                         <a href="#">2</a>
                         <a href="#">3</a>
                         <a href="#"><i class="fa fa-long-arrow-right"></i></a>
                     </div>
+                    {% endcomment %}
+                    <span class="step-links">
+                        {% if object.has_previous %}
+                            <a class="btn btn-outline-success mb-4" href="?page=1">&laquo; first</a>
+                            <a class="btn btn-outline-success mb-4" href="?page={{ object.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <span class="btn btn-dark mb-4">
+                            Page {{ object.number }} of {{ object.paginator.num_pages }}
+                        </span>
+
+                        {% if object.has_next %}
+                            <a class="btn btn-outline-success mb-4" href="?page={{ object.next_page_number }}">Next</a>
+                            <a class="btn btn-outline-success mb-4" href="?page={{ object.paginator.num_pages }}">last &raquo</a>
+                        {% endif %}
+                    </span>
                 </div>
             </div>
         </div>

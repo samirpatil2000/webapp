@@ -9,6 +9,9 @@ urlpatterns = [
    #path('',HomeView.as_view(),name='index'),
    path('',views.search,name='index'),
    #path('shop/', ProductListView.as_view(), name='shop'),
+
+
+   # This is the shop
    path('shop/', views.productList, name='shop'),
    #path('shop/<slug>',ProductDetailView.as_view(),name='shop-detail')
    path('shop/<slug>',views.ProductDeatilFBView,name='shop-detail'),

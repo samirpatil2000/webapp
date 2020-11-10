@@ -62,11 +62,13 @@ def search(request):
     search_result=''
     qs = Product.objects.all()
     cat = Category.objects.all()
+    """
     bread =qs.filter(category__name='Bread')
     Milk =qs.filter(category__name='Milk')
     Eggs =qs.filter(category__name='Egg')
     Chips =qs.filter(category__name='Chips')
     butter =qs.filter(category__name='Butter and Cheese')
+    """
 
 
     title_contains_query = request.GET.get('search_all')
@@ -89,11 +91,11 @@ def search(request):
         # 'object':qs,
         'object':paginated_queryset,
         'categories':cat,
-        'breads':bread,
-        'milk':Milk,
-        'eggs':Eggs,
-        'chips':Chips,
-        'butter':butter,
+        # 'breads':bread,
+        # 'milk':Milk,
+        # 'eggs':Eggs,
+        # 'chips':Chips,
+        # 'butter':butter,
         }
     return render(request,'ecom/index.html',context)
 
@@ -105,17 +107,32 @@ class ProductListView(ListView):
     template_name = 'ecom/shop-grid.html'
     context_object_name = 'object'
 
+
+# This is the shop
 def productList(request):
 
     template_name = 'ecom/shop-grid.html'
     cat=Category.objects.all()
     list=Product.objects.all()
 
+    # Create a paginator to split your products queryset
+    paginator = Paginator(list, 3)  # Show 1 contacts per page
+    # Get the current page number
+    page = request.GET.get('page')
+
+    try:
+        paginated_queryset = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_queryset = paginator.page(1)
+    except EmptyPage:  # showing last page
+        paginated_queryset = paginator.page(paginator.num_pages)
+
     context={
         'categories':cat,
-        'object':list
+        'object':paginated_queryset
     }
     return render(request,template_name,context)
+
 
 class ProductDetailView(DetailView):
     model = Product
@@ -123,16 +140,50 @@ class ProductDetailView(DetailView):
     context_object_name = 'object'
 
 def ProductDeatilFBView(request,slug):
-    detailData=Product.objects.get(slug=slug)
+    product=Product.objects.get(slug=slug)
+
+
+
+
+
+
+
 
     # TODO related meance use filter with category field
 
     # related_product=
     template_name = 'ecom/shop-details.html'
     context={
-        'object':detailData
+        'object':product
     }
+
+# TODO this is thing is only I know What the fuck I did is here
+    """ USER CART """
+    order=Order.objects.get(user=request.user,is_ordered=False)
+    products_in_order=order.products.all()
+    product_list=[]
+    for i in products_in_order:
+        product_list.append(i.product)
+        context['product_cart']=i
+    print(product_list)
+    print(products_in_order)
+    if product in product_list:
+        context['product_in_cart']=product
+        print("This is work")
+        print(product)
+    print("Product is not")
+    # print(order)
+    # print(products_in_order)
+    # print(product)
+
+    # if request.user.is_authenticated:
+    #     orders=Order.objects.filter(user=request.user,is_ordered=False)
+    #     # if orders.products.product.slug==slug
+
+
+
     return render(request,template_name,context)
+
 
 @login_required
 def add_to_cart(request,slug):
@@ -187,7 +238,7 @@ def add_to_cart_with_number(request,slug):
             messages.success(request,f'{product.name} is added to your cart')
             return redirect("shop-detail",slug=slug)
 
-
+@login_required
 def add_single_item_to_cart(request, slug):
     product=get_object_or_404(Product,slug=slug)
     order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
@@ -212,7 +263,7 @@ def add_single_item_to_cart(request, slug):
         messages.success(request,f'{product.name} is added to your cart')
         return redirect("cart")
 
-
+@login_required
 def remove_single_item_from_cart(request, slug):
     product=get_object_or_404(Product,slug=slug)
     order_product,created=ProductInCart.objects.get_or_create(user=request.user,product=product)
@@ -247,10 +298,10 @@ def remove_from_cart(request,slug):
             messages.success(request,f" {product.name}  removed ")
             return redirect("shop-detail",slug=slug)
         else:
-            messages.success(request,  "This product is not in your cart")
+            messages.warning(request,  "This product is not in your cart")
             return redirect("shop-detail",slug=slug)
     else:
-        messages.success(request,f' You donot have such product in your cart ')
+        messages.warning(request,f' You donot have such product in your cart ')
         return redirect("shop-detail",slug=slug)
 
 
@@ -344,9 +395,21 @@ def category_detail(request,slug):
     qs=Product.objects.filter(category=cat)
     cats=Category.objects.all()
 
+    # Create a paginator to split your products queryset
+    paginator = Paginator(qs, 3)  # Show 1 contacts per page
+    # Get the current page number
+    page = request.GET.get('page')
+
+    try:
+        paginated_queryset = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_queryset = paginator.page(1)
+    except EmptyPage:  # showing last page
+        paginated_queryset = paginator.page(paginator.num_pages)
+
 
     context={
-        'object': qs,
+        'object': paginated_queryset,
         'cat':cat,
         'categories': cats,
 
@@ -592,6 +655,7 @@ def transactions(request):
     }
     return render(request,'account/index.html',context)
 
+@login_required
 def user_address(request):
     address=Address.objects.filter(user=request.user)
     context={
@@ -599,6 +663,7 @@ def user_address(request):
     }
     return render(request,'ecom/user-address.html',context)
 
+@login_required
 def create_address(request):
     address=Address.objects.filter(user=request.user)
     if address.count() > 3:
