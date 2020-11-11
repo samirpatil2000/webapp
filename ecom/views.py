@@ -355,7 +355,7 @@ class ShoppingCart(LoginRequiredMixin,View):
 @login_required
 def add_to_fav(request,slug):
     prod=get_object_or_404(Product,slug=slug)
-    qs=Product.objects.filter(favourite=request.user)
+    qs=Product.objects.filter(favourite=request.user,slug=slug)
     if len(qs) > 20:
         messages.warning(request, " Cannot add more than 20")
 
@@ -370,7 +370,7 @@ def add_to_fav(request,slug):
 @login_required
 def remove_from_fav(request,slug):
     prod=get_object_or_404(Product,slug=slug)
-    qs=Product.objects.filter(favourite=request.user)
+    qs=Product.objects.filter(favourite=request.user,slug=slug)
     if qs.exists():
         prod.favourite.remove(request.user)
         messages.warning(request,f"{prod.name} is removed from favourite")

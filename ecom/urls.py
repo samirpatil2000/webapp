@@ -62,7 +62,7 @@ urlpatterns = [
    path('save_address/',views.user_address,name='save_address'),
 
    #create address
-   path('create_address',views.create_address,name='create_address'),
+   path('create_address/',views.create_address,name='create_address'),
 
 
    #payment option
@@ -70,8 +70,6 @@ urlpatterns = [
 
    #ordered placed
    # path('place_order/',views)
-
-
 
 
 ]
