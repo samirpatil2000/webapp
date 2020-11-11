@@ -356,6 +356,9 @@ class ShoppingCart(LoginRequiredMixin,View):
 def add_to_fav(request,slug):
     prod=get_object_or_404(Product,slug=slug)
     qs=Product.objects.filter(favourite=request.user)
+    if len(qs) > 20:
+        messages.warning(request, " Cannot add more than 20")
+
     if qs.exists():
         messages.warning(request," You already added ")
     else:
@@ -666,7 +669,7 @@ def user_address(request):
 @login_required
 def create_address(request):
     address=Address.objects.filter(user=request.user)
-    if address.count() > 3:
+    if len(address) > 3:
         messages.warning(request,"You cant create more that three address")
         return redirect('save_address')
 
