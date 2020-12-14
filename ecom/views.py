@@ -76,7 +76,7 @@ def search(request):
         qs=qs.filter(name__icontains=title_contains_query)
 
     # Create a paginator to split your products queryset
-    paginator = Paginator(qs, 2)  # Show 1 contacts per page
+    paginator = Paginator(qs, 8)  # Show 1 contacts per page
     # Get the current page number
     page = request.GET.get('page')
 
@@ -116,7 +116,7 @@ def productList(request):
     list=Product.objects.all()
 
     # Create a paginator to split your products queryset
-    paginator = Paginator(list, 3)  # Show 1 contacts per page
+    paginator = Paginator(list, 8)  # Show 1 contacts per page
     # Get the current page number
     page = request.GET.get('page')
 
@@ -400,7 +400,7 @@ def category_detail(request,slug):
     cats=Category.objects.all()
 
     # Create a paginator to split your products queryset
-    paginator = Paginator(qs, 3)  # Show 1 contacts per page
+    paginator = Paginator(qs, 6)  # Show 1 contacts per page
     # Get the current page number
     page = request.GET.get('page')
 

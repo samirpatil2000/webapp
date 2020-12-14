@@ -44,7 +44,9 @@
                              {% for order_item in orders %}
                                 <tr>
                                     <td class="shoping__cart__item">
-                                        <img href="{{ obj.get_absolute_url }}" src="{% static 'ecom/img/cart/cart-1.jpg' %}" alt="">
+                                        {% comment %}
+                                            <img href="{{ obj.get_absolute_url }}" src="{% static 'ecom/img/cart/cart-1.jpg' %}" alt="">
+                                        {% endcomment %}
                                         <h5>{{ order_item.trans_date }}</h5>
                                     </td>
                                     {% comment %}

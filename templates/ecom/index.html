@@ -70,7 +70,7 @@
                 <div class="categories__slider owl-carousel">
                     {% for cat in categories %}
                         <div class="col-lg-3">
-                            <div class="categories__item set-bg" data-setbg="{% static 'ecom/img/categories/cat-3.jpg' %}">
+                            <div class="categories__item set-bg" data-setbg="{{ cat.thumbnail.url }}">
                                 <h5><a href="{{ cat.get_absolute_cat_url }}">{{ cat.name }}</a></h5>
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                 {% for obj in object %}
                 <div class="col-lg-3 col-md-4 col-sm-6 mix">
                     <div class="featured__item">
-                        <div class="featured__item__pic set-bg" href="{{ obj.get_absolute_url }}" data-setbg="{% static 'ecom/img/featured/feature-4.jpg' %}">
+                        <div class="featured__item__pic set-bg" href="{{ obj.get_absolute_url }}" data-setbg="{{ obj.thumbnail.url }}">
                             <ul class="featured__item__pic__hover">
 <!--                            <ul class="featured__item__pic__hover">-->
                                 <li><a href="{{ obj.get_add_to_fav_url }}"><i class="fa fa-heart"></i></a></li>

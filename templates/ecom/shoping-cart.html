@@ -42,7 +42,7 @@
                              {% for order_item in object.products.all %}
                                 <tr>
                                     <td class="shoping__cart__item">
-                                        <img href="{{ obj.get_absolute_url }}" src="{% static 'ecom/img/cart/cart-1.jpg' %}" alt="">
+                                        <img href="{{ obj.get_absolute_url }}" src="{{ order_item.product.thumbnail.url }}" alt="">
                                         <h5>{{ order_item.product.name }}</h5>
                                     </td>
                                     <td class="shoping__cart__price">

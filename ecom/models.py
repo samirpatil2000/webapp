@@ -41,6 +41,7 @@ def default_cat():
 class Category(models.Model):
     name=models.CharField(default=default_cat,max_length=100)
     slug=models.SlugField(unique=True)
+    thumbnail = models.ImageField(upload_to='cat_images', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -58,6 +59,8 @@ class Product(models.Model):
     slug=models.SlugField()
     list_product=models.BooleanField(default=True)
     favourite=models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,null=True)
+
+    thumbnail=models.ImageField(upload_to='product_images',blank=True,null=True)
 
 
     def __str__(self):
