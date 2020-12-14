@@ -33,17 +33,22 @@
                     <div class="product__details__pic">
                         <div class="product__details__pic__item">
                             <img class="product__details__pic__item--large"
-                                src="{% static 'ecom/img/product/details/product-details-1.jpg' %}" alt="">
+                                src="{{ object.thumbnail.url }}" alt="">
                         </div>
                         <div class="product__details__pic__slider owl-carousel">
-                            <img data-imgbigurl="{% static 'ecom/img/product/details/product-details-2.jpg' %}"
-                                src="{% static 'ecom/img/product/details/thumb-1.jpg' %}" alt="">
-                            <img data-imgbigurl="{% static 'ecom/img/product/details/product-details-3.jpg' %}"
-                                src="{% static 'ecom/img/product/details/thumb-2.jpg' %}" alt="">
+                            <img data-imgbigurl="{{ object.thumbnail.url }}"
+                                src="{{ object.thumbnail.url }}" alt="">
+                            {% for img in images %}
+                                <img data-imgbigurl="{{ img.image.url }}"
+                                src="{{ img.image.url }}" alt="">
+                            {% endfor %}
+
+                            {% comment %}
                             <img data-imgbigurl="{% static 'ecom/img/product/details/product-details-5.jpg' %}"
                                 src="{% static 'ecom/img/product/details/thumb-3.jpg' %}" alt="">
                             <img data-imgbigurl="{% static 'ecom/img/product/details/product-details-4.jpg' %}"
                                 src="{% static 'ecom/img/product/details/thumb-4.jpg' %}" alt="">
+                            {% endcomment %}
                         </div>
                     </div>
                 </div>

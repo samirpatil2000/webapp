@@ -16,6 +16,7 @@ from .models import (ProductInCart,
                      Category,
                      Address,
                      Transaction,
+                    Image,
                      IP,)
 from .forms import (AddressForm,
                     UpdateAddress,
@@ -153,8 +154,11 @@ def ProductDeatilFBView(request,slug):
 
     # related_product=
     template_name = 'ecom/shop-details.html'
+    images=Image.objects.filter(Product=product)
+
     context={
-        'object':product
+        'object':product,
+        'images':images,
     }
 
 # TODO this is thing is only I know What the fuck I did is here

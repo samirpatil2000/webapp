@@ -38,6 +38,18 @@ def default_cat():
     n=random.randrange(0,len(cat_list))
     return cat_list[n]
 
+
+
+
+class Image(models.Model):
+    Product=models.ForeignKey('Product',on_delete=models.CASCADE,related_name='product_images',blank=True,null=True)
+    image=models.ImageField(upload_to='product_images')
+
+
+    def __str__(self):
+        return self.Product.name
+
+
 class Category(models.Model):
     name=models.CharField(default=default_cat,max_length=100)
     slug=models.SlugField(unique=True)
@@ -61,6 +73,8 @@ class Product(models.Model):
     favourite=models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,null=True)
 
     thumbnail=models.ImageField(upload_to='product_images',blank=True,null=True)
+
+    images=models.ManyToManyField(Image,blank=True)
 
 
     def __str__(self):
