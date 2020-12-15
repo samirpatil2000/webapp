@@ -28,7 +28,7 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 """TODO
-    1. multiple images in post details
+   ----- 1. multiple images in post details
     2. post detail related products 
     3. favourite button in post detail
     
